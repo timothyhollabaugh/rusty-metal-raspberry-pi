@@ -127,7 +127,7 @@ pub fn shift_alt(pin: u32, alt: Modes) -> u32 {
         7 => (alt as u32) << 21,
         8 => (alt as u32) << 24,
         9 => (alt as u32) << 27,
-        _ => panic!()
+        _ => 0
     }
 }
 

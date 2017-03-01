@@ -16,7 +16,14 @@ extern fn eh_personality() {}
 
 #[cfg(not(test))]
 #[lang = "panic_fmt"]
-extern fn panic_fmt() {}
+extern fn panic_fmt(_: ::core::fmt::Arguments, _: &'static str, _: u32) -> ! {
+        loop {}
+}
+
+#[export_name = "_ZN4core9panicking5panic17h35c8394187578520E"]
+pub fn panic()-> ! {
+     loop {}
+}
 
 // Satisfies the linker's need for _exit, _kill, etc
 #[cfg(not(test))]
