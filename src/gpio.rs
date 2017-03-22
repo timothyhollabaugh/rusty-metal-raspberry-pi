@@ -37,6 +37,66 @@ pub const GPREN1: isize = 20;
 pub const GPFEN0: isize = 22;
 pub const GPFEN1: isize = 23;
 
+pub const GPPUD:  isize = 25;
+pub const GPPUDCLK0: isize = 26;
+pub const GPPUDCLK1: isize = 27;
+
+pub enum Modes {
+    In   = 0b000,
+    Out  = 0b001,
+    Alt0 = 0b100,
+    Alt1 = 0b101,
+    Alt2 = 0b110,
+    Alt3 = 0b111,
+    Alt4 = 0b011,
+    Alt5 = 0b010
+}
+
+pub enum PullModes {
+    Off  = 0b00,
+    Down = 0b01,
+    Up   = 0b10
+}
+
+pub fn set_pull_mode(pin: u32, mode: PullModes) {
+
+    if pin > 53 {
+        return
+    }
+    
+    let bit = if pin < 32 {
+        pin
+    } else {
+        pin - 32
+    };
+
+    let clk_byte = if pin < 32 { 
+        unsafe { base::get_reg(GPIO, GPPUDCLK0) }
+    } else {
+        unsafe { base::get_reg(GPIO, GPPUDCLK1) }
+    };
+
+    unsafe {
+
+        *(base::get_reg(GPIO, GPPUD)) = mode as u32;
+
+        for _ in 0..150 {
+            base::nothing();
+        }
+
+        *(clk_byte) = 1 << bit;
+
+        for _ in 0..150 {
+            base::nothing();
+        }
+
+        *(base::get_reg(GPIO, GPPUD)) = PullModes::Off as u32;
+
+        *(clk_byte) = 0;
+    }
+}
+
+
 /// Pin for the onboard led on the pi zero
 /// Note that it is inverted on the pi zero
 pub const ACT_LED: u32 = 47;
@@ -64,7 +124,7 @@ pub fn get_gpsel(pin: u32) -> Option<isize> {
     }
 }
 
-
+///
 /// Set a pin to a mode specified in gpio::Modes
 ///
 /// If pin does not exist, it will do nothing
