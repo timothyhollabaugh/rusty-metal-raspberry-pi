@@ -17,12 +17,29 @@ extern fn eh_personality() {}
 #[cfg(not(test))]
 #[lang = "panic_fmt"]
 extern fn panic_fmt(_: ::core::fmt::Arguments, _: &'static str, _: u32) -> ! {
-        loop {}
+    loop {
+        //gpio::digital_write(gpio::ACT_LED, true);
+        //systimer::delay_micros(100000);
+
+        //gpio::digital_write(gpio::ACT_LED, false);
+        //systimer::delay_micros(100000);
+    }
 }
 
 #[export_name = "_ZN4core9panicking5panic17h35c8394187578520E"]
 pub fn panic()-> ! {
-     loop {}
+    loop {
+        //gpio::digital_write(gpio::ACT_LED, true);
+        //systimer::delay_micros(100000);
+
+        //gpio::digital_write(gpio::ACT_LED, false);
+        //systimer::delay_micros(200000);
+    }
+}
+
+#[export_name = "_ZN4core9panicking18panic_bounds_check17h287e674c659b6430E"]
+pub fn panic_bounds_check()-> ! {
+    loop {}
 }
 
 // Satisfies the linker's need for _exit, _kill, etc
