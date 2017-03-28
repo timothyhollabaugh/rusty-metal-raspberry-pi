@@ -113,7 +113,7 @@ pub fn digital_write(pin: u32, state: bool) {
 
     let bit = if pin < 32 { pin } else { pin - 32 };
 
-    unsafe { *(byte) = (1 << bit) }
+    unsafe { *(byte) = 1 << bit }
 }
 
 

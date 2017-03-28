@@ -56,28 +56,26 @@ pub const C3: isize = 6;
 
 #[no_mangle]
 pub fn timer_lower_bits() -> u32 {
-    unsafe{
-        *(SYSTIMER.offset(CLO))
-    }
+    unsafe { *(SYSTIMER.offset(CLO)) }
 }
 
 #[no_mangle]
 pub fn timer_higher_bits() -> u32 {
-    unsafe{
-        *(SYSTIMER.offset(CHI))
-    }
+    unsafe { *(SYSTIMER.offset(CHI)) }
 }
 
+/*
 #[no_mangle]
 pub fn timer_64_bits() -> u64 {
-    ((timer_higher_bits() as u64)  << 32) + (timer_lower_bits() as u64)
+    ((timer_higher_bits() as u64) << 32) + (timer_lower_bits() as u64)
 }
+*/
 
 #[no_mangle]
 pub fn delay_micros(us: u32) {
     let start_time = timer_lower_bits();
 
     while timer_lower_bits() - start_time < us {
-        base::nothing();    
+        base::nothing();
     }
 }
