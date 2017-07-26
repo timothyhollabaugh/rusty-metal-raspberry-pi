@@ -99,6 +99,9 @@ pub fn set_mode(pin: u32, mode: Modes) {
 #[no_mangle]
 pub fn digital_write(pin: u32, state: bool) {
 
+    // Get the location in memory that controls the bank of
+    // pins with this pin in it. There are seoerate banks
+    // for pins 1-32 and 33-54, as well as for set and reset
     let byte = if pin < 32 {
         match state {
             true => unsafe { GPIO.offset(GPSET0) as *mut u32 },
@@ -111,8 +114,10 @@ pub fn digital_write(pin: u32, state: bool) {
         }
     };
 
+    // Get the bit for this pin in the memory location
     let bit = if pin < 32 { pin } else { pin - 32 };
 
+    // Set the bit
     unsafe { *(byte) = 1 << bit }
 }
 
